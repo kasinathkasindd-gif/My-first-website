@@ -7,12 +7,25 @@ const INK = '#141414';
 
 // ------------------------------------------------------------------------------------------- layer
 /** One flat multiplane layer at depth z: scale k = 1000 / (z - cam.z). Children use world coordinates. */
+const CLIP = 80; // layers are clipped to the frame plus this margin (room for screen shake)
 export const Layer: React.FC<{cam: Cam; z: number; blur?: number; children: React.ReactNode}> = ({cam, z, blur = 0, children}) => {
   const d = z - cam.z;
   if (d < 250) return null;
   const k = 1000 / d;
+  // Clipping matters for speed: without it a blur filter is computed over everything the layer paints,
+  // and the world layers paint far beyond the frame (cloud margins, the ground band).
   return (
-    <AbsoluteFill style={{filter: blur > 0.05 ? `blur(${blur}px)` : undefined}}>
+    <div
+      style={{
+        position: 'absolute',
+        left: -CLIP,
+        top: -CLIP,
+        width: 1080 + 2 * CLIP,
+        height: 1920 + 2 * CLIP,
+        overflow: 'hidden',
+        filter: blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : undefined,
+      }}
+    >
       <div
         style={{
           position: 'absolute',
@@ -21,12 +34,12 @@ export const Layer: React.FC<{cam: Cam; z: number; blur?: number; children: Reac
           width: 0,
           height: 0,
           transformOrigin: '0 0',
-          transform: `translate(540px, 960px) scale(${k}) translate(${-cam.x}px, ${-cam.y}px)`,
+          transform: `translate(${540 + CLIP}px, ${960 + CLIP}px) scale(${k}) translate(${-cam.x}px, ${-cam.y}px)`,
         }}
       >
         {children}
       </div>
-    </AbsoluteFill>
+    </div>
   );
 };
 export const Svg: React.FC<{children: React.ReactNode}> = ({children}) => (

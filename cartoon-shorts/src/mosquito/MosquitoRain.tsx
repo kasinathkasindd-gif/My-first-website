@@ -23,11 +23,15 @@ export const MosquitoRain: React.FC = () => {
   const d2 = drop2(t);
   const d3 = drop3(t);
   const th = seesawTheta(t);
-  // depth of field (cheap stand-in for a blur): soften the far sky while the camera is close on the action
+  // depth of field: blur the far sky (2.5-3.6 px) while the camera is close on the action, and let it lose a little
+  // contrast so the characters pop
   const soft = Math.max(0, Math.min(1, (k - 1.45) / 0.4));
+  const dof = soft * 3.0;
 
   const ls: L[] = [];
-  ls.push({z: 4200, key: 'cloudsFar', node: <Clouds cam={cam} z={4200} far t={t} soft={soft} />});
+  // only the far sky layer is blurred (a 4K blur costs ~1 s a layer on this CPU-only renderer); the mid clouds just
+  // lose contrast, and the hills are never in frame during the close-ups
+  ls.push({z: 4200, key: 'cloudsFar', node: <Clouds cam={cam} z={4200} far t={t} soft={soft * 0.5} />, blur: dof * 1.2});
   ls.push({z: 3200, key: 'hills', node: <Hills cam={cam} z={3200} />});
   ls.push({z: 2600, key: 'cloudsMid', node: <Clouds cam={cam} z={2600} far={false} t={t} soft={soft * 0.85} />});
   for (const r of RAIN) ls.push({z: r.z, key: `rain${r.z}`, node: <Rain cam={cam} camV={camV} spec={r} t={t} />});

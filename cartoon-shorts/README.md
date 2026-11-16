@@ -72,6 +72,7 @@ node scripts/render.mjs preview    # -> out/preview-half.mp4 (540x960)
   buzz, boing, whooshes, whistle, slow-mo whomp/speed-up, squish, ticks, ding, flip, boop, tap and pop are synthesised.
 - Actors are placed with CSS `transform: translate(...)`, never `left/top`: Chrome pixel-snaps `left/top` in the
   layer's unscaled space, which the multiplane scale then turns into 1-2 px judder on slow camera moves.
-- Depth of field: a CSS blur on the far cloud layers made close-up frames ~4x slower to render at 4K on this CPU-only
-  machine (4.1 s vs 1.1 s a frame), so while the camera is close the far clouds lose contrast instead (outlines fade
-  toward the fill, fills toward haze). Put `filter: blur()` back in `Layer` if you render on a GPU.
+- Depth of field: while the camera is close (k > 1.45 on the character plane) the far cloud layer gets a CSS blur of
+  up to 3.6 px and the mid clouds lose contrast. Only one layer is blurred because a 4K blur costs ~1 s a layer per
+  frame on this CPU-only renderer (3 blurred layers: 4.4 s/frame; 1 layer: 2.3 s; none: 1.1 s). Layers are clipped to
+  the frame + 80 px (room for the screen shake).
