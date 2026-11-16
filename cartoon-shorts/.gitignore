@@ -1,0 +1,7 @@
+node_modules/
+out/
+build/
+.venv/
+images/*/raw/*.json
+images/*/vo_*.wav
+images/*/qa/
