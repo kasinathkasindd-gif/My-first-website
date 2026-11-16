@@ -75,14 +75,16 @@ const makeClouds = (seed: number, n: number, x0: number, x1: number, y0: number,
 const CLOUDS_FAR = makeClouds(11, 30, -2400, 3600, -12500, -900, 900);
 const CLOUDS_MID = makeClouds(23, 30, -1400, 2600, -10200, -1300, 520);
 
-export const Clouds: React.FC<{cam: Cam; z: number; far: boolean; t: number}> = ({cam, z, far, t}) => {
+/** soft (0..1): depth-of-field stand-in while the camera is close - outlines fade toward the fill, fills toward haze */
+export const Clouds: React.FC<{cam: Cam; z: number; far: boolean; t: number; soft?: number}> = ({cam, z, far, t, soft = 0}) => {
   const v = view(cam, z, far ? 1400 : 900);
   const list = far ? CLOUDS_FAR : CLOUDS_MID;
   const drift = sceneTime(t) * (far ? 5 : 9);
   const sw = far ? 10 : 7;
-  const fill = far ? '#BCCAD5' : '#A9B9C7';
-  const shade = far ? '#A9B8C5' : '#93A4B3';
-  const ink = far ? '#39444E' : INK;
+  const haze = '#C6D6E1';
+  const fill = mix(far ? '#BCCAD5' : '#A9B9C7', haze, 0.35 * soft);
+  const shade = mix(far ? '#A9B8C5' : '#93A4B3', haze, 0.35 * soft);
+  const ink = mix(far ? '#39444E' : '#141414', far ? '#A9B8C5' : '#93A4B3', 0.62 * soft);
   const vis = list.filter((c) => c.x + drift > v.x0 && c.x + drift < v.x1 && c.y > v.y0 && c.y < v.y1);
   return (
     <Svg>

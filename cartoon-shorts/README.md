@@ -16,7 +16,8 @@ Sources: Dickerson, Shankles, Madhavan & Hu, "Mosquitoes survive raindrop collis
 PNAS 2012 (https://www.pnas.org/doi/10.1073/pnas.1205446109) and the Georgia Tech release "Mosquitoes Fly in Rain
 Thanks to Low Mass" (https://coe.gatech.edu/news/2012/06/mosquitoes-fly-rain-thanks-low-mass).
 
-Output: 1080x1920 composition at 60 fps, rendered at scale 2 -> 2160x3840 H.264 (CRF 16, yuv420p), 22.0 s.
+Output: 1080x1920 composition at 60 fps, rendered at scale 2 -> 2160x3840 H.264 (PNG frames, CRF 16, x264 preset
+`faster`, yuv420p), 22.0 s.
 
 ### Beat sheet
 
@@ -71,3 +72,6 @@ node scripts/render.mjs preview    # -> out/preview-half.mp4 (540x960)
   buzz, boing, whooshes, whistle, slow-mo whomp/speed-up, squish, ticks, ding, flip, boop, tap and pop are synthesised.
 - Actors are placed with CSS `transform: translate(...)`, never `left/top`: Chrome pixel-snaps `left/top` in the
   layer's unscaled space, which the multiplane scale then turns into 1-2 px judder on slow camera moves.
+- Depth of field: a CSS blur on the far cloud layers made close-up frames ~4x slower to render at 4K on this CPU-only
+  machine (4.1 s vs 1.1 s a frame), so while the camera is close the far clouds lose contrast instead (outlines fade
+  toward the fill, fills toward haze). Put `filter: blur()` back in `Layer` if you render on a GPU.

@@ -23,13 +23,13 @@ export const MosquitoRain: React.FC = () => {
   const d2 = drop2(t);
   const d3 = drop3(t);
   const th = seesawTheta(t);
-  // depth of field: soften the far sky while the camera is close on the action
-  const dof = Math.max(0, Math.min(1, (k - 1.45) / 0.4)) * 2.6;
+  // depth of field (cheap stand-in for a blur): soften the far sky while the camera is close on the action
+  const soft = Math.max(0, Math.min(1, (k - 1.45) / 0.4));
 
   const ls: L[] = [];
-  ls.push({z: 4200, key: 'cloudsFar', node: <Clouds cam={cam} z={4200} far t={t} />, blur: dof});
-  ls.push({z: 3200, key: 'hills', node: <Hills cam={cam} z={3200} />, blur: dof});
-  ls.push({z: 2600, key: 'cloudsMid', node: <Clouds cam={cam} z={2600} far={false} t={t} />, blur: dof * 0.8});
+  ls.push({z: 4200, key: 'cloudsFar', node: <Clouds cam={cam} z={4200} far t={t} soft={soft} />});
+  ls.push({z: 3200, key: 'hills', node: <Hills cam={cam} z={3200} />});
+  ls.push({z: 2600, key: 'cloudsMid', node: <Clouds cam={cam} z={2600} far={false} t={t} soft={soft * 0.85} />});
   for (const r of RAIN) ls.push({z: r.z, key: `rain${r.z}`, node: <Rain cam={cam} camV={camV} spec={r} t={t} />});
   ls.push({
     z: 1800,

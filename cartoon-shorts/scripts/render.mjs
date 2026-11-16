@@ -31,6 +31,7 @@ if (mode === 'audio') {
     codec: 'h264',
     scale: 2,
     crf: 16,
+    x264Preset: 'faster',
     pixelFormat: 'yuv420p',
     imageFormat: 'png',
     chromiumOptions: {gl: 'swangle'},
