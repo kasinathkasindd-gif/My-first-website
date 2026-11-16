@@ -1,7 +1,8 @@
 Source pictures, prompts and audio prep for `MosquitoRain`. See ../../README.md.
 
-Credits used on Higgsfield: 6 pictures x 1 (gpt_image_2_5, 2k, medium, transparent) + voice 1.05
-(text2speech_v2 / elevenlabs / "Mark") + 2 sound effects x 0.5 (seed_audio) = 8.05.
+Credits used on Higgsfield (from the account's transaction log): 6 pictures x 1.0 (gpt_image_2_5, 2k, medium,
+transparent) + voice 1.2 (text2speech_v2 / elevenlabs / "Mark") + 2 sound effects 0.9 + 1.2 (seed_audio; the
+preflight quoted 0.5 each) = 9.3 of the 12.25 available.
 Two requests hit a 429 rate limit and created no job (the squished pose was resubmitted; the squish sound was
 synthesised instead).
 
